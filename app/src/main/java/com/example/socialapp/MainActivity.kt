@@ -26,17 +26,18 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.socialapp.presentation.MainScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val container = (application as SocialApp).container
 
-        // الـ ViewModels مسؤولة عن منطق التطبيق لكل شاشة:
-        val splashVM = SplashViewModel(container.authRepository)
-        val signInVM = SignInViewModel(SignInUseCase(container.authRepository))
-        val signUpVM = SignUpViewModel(SignUpUseCase(container.authRepository))
+
+
+
 
         setContent {
             val navController = rememberNavController()
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 startDestination = NavRoutes.Splash
             ) {
                 composable(NavRoutes.Splash) {
+                    val splashVM: SplashViewModel= hiltViewModel()
                     SplashScreen(
                         vm = splashVM,
                         onGoHome = { navController.navigate(NavRoutes.Home) },
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(NavRoutes.SignIn) {
+                    val signInVM: SignInViewModel = hiltViewModel()
                     SignInScreen(
                         vm = signInVM,
                         onGoHome = { navController.navigate(NavRoutes.Home) },
@@ -62,6 +65,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(NavRoutes.SignUp) {
+                     val signUpVM: SignUpViewModel = hiltViewModel()
                     SignUpScreen(
                         vm = signUpVM,
                         onGoHome = { navController.navigate(NavRoutes.Home) },

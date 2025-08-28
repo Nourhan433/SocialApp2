@@ -3,27 +3,34 @@ package com.example.socialapp.presentation.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socialapp.data.repo.AuthRepository
+import com.example.socialapp.session.SessionManager
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SplashViewModel(repo: AuthRepository) : ViewModel() {
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    private val sessionManager: SessionManager
+) : ViewModel() {
+    private val _isLoggedIn = MutableStateFlow<Boolean?>(null)
+   val isLoggedIn: StateFlow<Boolean?> =_isLoggedIn
 
-    //currentUserFlow هو تيار بيانات (Flow) من الريبو بيرجع آخر مستخدم متسجل دخول.
-    //
-    //لو مفيش حد مسجل دخول، القيمة هتكون null.
-    val isLoggedIn = repo.currentUserFlow
-// . map 3aiza 27wl data al user l true or false lw 7d
-        // msgl yb2a true lw m7d4 yb2a false
-        .map { it != null }
-        //ده بيخلي الـ Flow يتحول لـ StateFlow، يعني تيار بيانات له حالة ثابتة يمكن مراقبتها في الـ UI.
-        //
-        //viewModelScope → عشان الـ Flow يبقى مرتبط بـ ViewModel ويقف لما ViewModel يتدمر.
-        //
-        //SharingStarted.Eagerly → يبدأ التيار فورًا ويشارك البيانات لأي مشترك.
-        //
-        //false → القيمة الابتدائية (لو التيار ما بدأش يجيب بيانات بعد).
+    init{
+        checkLoginStatus()
+    }
+
+    private fun checkLoginStatus() {
+        viewModelScope.launch {
+            val id =sessionManager.userIdFlow.firstOrNull()
+            _isLoggedIn.value = id !=null
+        }
+    }
 
 
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 }

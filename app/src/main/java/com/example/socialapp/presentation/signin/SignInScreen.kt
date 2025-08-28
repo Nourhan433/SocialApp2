@@ -9,15 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.socialapp.domain.usecase.SignInUseCase
 
 @Composable
 fun SignInScreen(
-    vm: SignInViewModel,
+    vm: SignInViewModel = hiltViewModel(),
     onGoHome: () -> Unit,
     onGoSignUp: () -> Unit
 ) {
-    val state = vm.state.collectAsState().value
+    val state by vm.state.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),

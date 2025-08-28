@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socialapp.domain.usecase.SignUpUseCase
 import com.example.socialapp.data.repo.AuthError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class SignUpState(
     val username: String = "",
@@ -17,8 +19,9 @@ data class SignUpState(
     val isLoading: Boolean = false,
     val error: String? = null
 )
-
-class SignUpViewModel(private val signUpUseCase: SignUpUseCase) : ViewModel() {
+@HiltViewModel
+class SignUpViewModel
+    @Inject constructor(private val signUpUseCase: SignUpUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
     val state: StateFlow<SignUpState> = _state

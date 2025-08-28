@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id ("dagger.hilt.android.plugin")
     id ("kotlin-kapt")
 
 }
@@ -55,6 +56,11 @@ dependencies {
 
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     kapt ("androidx.room:room-compiler:2.6.1")
+
+    implementation ("com.google.dagger:hilt-android:2.48")
+    kapt ("com.google.dagger:hilt-compiler:2.48")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+
 
     // Room
     implementation ("androidx.room:room-runtime:2.6.1")
